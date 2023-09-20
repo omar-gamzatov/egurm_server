@@ -1,26 +1,24 @@
 #ifndef DBSESSION_H
 #define DBSESSION_H
 
+#include <includes.hpp>
 #include <DBConnection.hpp>
+#include <SQLQueries.hpp>
 
-class DBSession
-{
+class DBSession {
 private:
-    boost::shared_ptr<pqxx::connection> connection;
+    std::shared_ptr<pqxx::connection> connection;
+    std::shared_ptr<pqxx::work> wrk;
+
 public:
     DBSession();
-    ~DBSession();
+    ~DBSession() = default;
+    void start();
+    void stop();
+
+    boost::asio::awaitable<int> get_serial_number();
+    static void create_table_if_not_exists();
+
 };
-
-DBSession::DBSession()
-{
-    connection = std::move(DBConnection::get_connection());
-}
-
-DBSession::~DBSession()
-{
-    DBConnection::free_connection(std::move(connection));
-}
-
 
 #endif // !DBSESSION_H
