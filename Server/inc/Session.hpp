@@ -8,22 +8,28 @@ using callback = std::function<void(const error_code)>;
 
 class Session : public std::enable_shared_from_this<Session> {
 public:
-	Session(tcp::socket&& socket, boost::shared_ptr<io::io_context> _context);
+	Session(tcp::socket&& socket, std::shared_ptr<io::io_context> _context);
 	~Session() = default;
-	void set_name(std::string name);
 	
 private:
-	boost::shared_ptr<io::io_context> context;
+	std::shared_ptr<io::io_context> context;
 	tcp::socket socket;
-	std::string username;
+	boost::json::value client_info;
 	error_code err_code;
 	DBSession db;
 
 	char buff[1024] = {};
 	std::string write_msg;
 
+	boost::asio::awaitable<void> send(std::string);
+	boost::asio::awaitable<std::size_t> read();
+	boost::asio::awaitable<void> clear_read_buffer();
+	boost::asio::awaitable<void> get_client_info();
+	boost::asio::awaitable<void> get_serial_number();
+	boost::asio::awaitable<void> insert_test_info();
 	boost::asio::awaitable<void> run_session();
 	boost::asio::awaitable<void> get_resp(const char* buff);
+
 	//boost::asio::awaitable<void> log(std::string &msg);
 };
 

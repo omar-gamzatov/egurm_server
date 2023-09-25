@@ -12,7 +12,7 @@ public:
 
 private:
 	uint16_t port;
-	boost::shared_ptr<io::io_context> context;
+	std::shared_ptr<io::io_context> context;
 	std::optional<tcp::acceptor> acceptor;
 	std::optional<tcp::socket> socket;
 	std::vector<std::shared_ptr<Session>> clients;

@@ -24,13 +24,15 @@ void DBConnection::create_pool(std::string _db_access, unsigned int _pool_size =
             }
         }
         catch (const std::exception& e) {
-            std::cerr << e.what() << std::endl;
+            std::cerr << e.what() << std::endl; // error log
         }
     }
     if (tmp_cnt == pool_size) {
+	    std::cout << "database connection pool created\n"; // info log
         // logger << "database connection pool created";
     } else {
         // loger << database connection pool not created correctly";
+         // error log
     }
 }
 
@@ -61,6 +63,7 @@ bool DBConnection::free_connection(std::shared_ptr<pqxx::connection>&& ptr) {
 
 bool DBConnection::add_connection() {
     std::shared_ptr<pqxx::connection> db_ptr = std::make_shared<pqxx::connection>(db_access);
+    std::cout << "new db connection will be added" << std::endl; // info log
     if (db_ptr->is_open()) {
             std::unique_lock<boost::fibers::mutex> lock(mtx);
             pool.push(db_ptr);
@@ -71,7 +74,7 @@ bool DBConnection::add_connection() {
             // logger << "new database connection failed: internal memory pool is exhausted"
     } else {
         // logger << "new database connection failed: connection closed";
-        return false;
+        return false; // error log
     }
 }
 

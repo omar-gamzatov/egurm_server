@@ -8,6 +8,7 @@ set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 
 set(BOOST_LIB_DIR "C:/boost/boost_1_82_0/stage/lib")
 set(BOOST_DIR "C:/boost/boost_1_82_0")
+set(CLIENT_INCLUDE_DIR "./Client/inc")
 set(SERVER_INCLUDE_DIR "./Server/inc")
 
 set(PQXX_DIR "C:/Program Files (x86)/libpqxx/include")
@@ -17,20 +18,21 @@ set(LIBPQ_DIR "C:/Program Files (x86)/PostgreSQL/10/include")
 set(LIBPQ_LIB_DIR "C:/Program Files (x86)/PostgreSQL/10/lib")
 
 
-include_directories(${BOOST_DIR} ${SERVER_INCLUDE_DIR} ${PQXX_DIR} ${LIBPQ_DIR})
+include_directories(${BOOST_DIR} ${SERVER_INCLUDE_DIR} ${CLIENT_INCLUDE_DIR} ${PQXX_DIR} ${LIBPQ_DIR})
 link_directories(${BOOST_LIB_DIR}  )
 
 add_executable(client 
     Client/client_entry_point.cpp 
-    Client/Client.cpp   Client/Client.hpp)
+    Client/src/Client.cpp   Client/inc/Client.hpp)
 
 add_executable(server
-    Server/main.cpp         Server/inc/includes.hpp
-    Server/src/Server.cpp   Server/inc/Server.hpp
-    Server/src/Session.cpp  Server/inc/Session.hpp
-    Server/src/DBConnection.cpp  Server/inc/DBConnection.hpp
-    Server/src/DBSession.cpp  Server/inc/DBSession.hpp
-    Server/inc/Logger.hpp
+    Server/main.cpp                 Server/inc/includes.hpp
+    Server/src/Server.cpp           Server/inc/Server.hpp
+    Server/src/Session.cpp          Server/inc/Session.hpp
+    Server/src/DBConnection.cpp     Server/inc/DBConnection.hpp
+    Server/src/DBSession.cpp        Server/inc/DBSession.hpp
+                                    Server/inc/Logger.hpp
+                                    Server/inc/SQLQueries.hpp
 )
 
 target_link_libraries(server pqxx libpq wsock32 ws2_32)

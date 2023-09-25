@@ -12,12 +12,16 @@ private:
 
 public:
     DBSession();
-    ~DBSession() = default;
+    ~DBSession();
+
     void start();
     void stop();
 
-    boost::asio::awaitable<int> get_serial_number();
     static void create_table_if_not_exists();
+
+    boost::asio::awaitable<std::string> get_serial_number(boost::json::value client_info);
+    boost::asio::awaitable<std::string> get_test_info(boost::json::value client_info);
+    boost::asio::awaitable<void> insert_test_info(boost::json::value client_info);
 
 };
 
